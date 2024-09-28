@@ -42,6 +42,13 @@ jobs:
         run: |
           echo y | sf plugins install sfdx-git-delta
           sf plugins
+      - name: Check for file changes
+        run: |
+          git log -n 2 --oneline
+          git diff HEAD~1 HEAD --name-only
+          echo "List of files changed in the PR:"
+          MERGE_BASE=$(git merge-base HEAD origin/Integration)
+          git diff $MERGE_BASE HEAD  --name-only
       - name: Create delta packages for new, modified or deleted metadata
         run: |
           mkdir changed-sources
@@ -64,10 +71,6 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: changed-sources/apexScanResults.sarif
-      - name: Check for file changes
-        run: |
-          git log -n 2 --oneline
-          git diff HEAD~1 HEAD --name-only
       - name: Deployment - run no tests
         run: |
           echo "Listing files in changed-sources/force-app:"
