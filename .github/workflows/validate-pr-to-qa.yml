@@ -36,23 +36,22 @@ jobs:
         run: |
           echo ${{ secrets.QA_SFDX_URL}} > ./QA_SFDX_URL.txt
       - name: Authenticate to target Org
-        run: sfdx auth:sfdxurl:store -f ./QA_SFDX_URL.txt -s -a targetOrg
+        run: sf org login sfdx-url -f ./QA_SFDX_URL.txt --alias targetOrg --set-default
       - name: Installing sfdx git delta
         run: |
-          echo y | sfdx plugins:install sfdx-git-delta
-          sfdx plugins 
+          echo y | sf plugins install sfdx-git-delta
+          sf plugins
       - name: Create delta packages for new, modified or deleted metadata
         run: >
           mkdir changed-sources
 
-          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/ 
+          sf project generate delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source-dir force-app/
       - name: Installing java
         run: sudo apt-get update && sudo apt-get install default-jdk
       - name: Installing SFDX scanner
-        run: sfdx plugins:install @salesforce/sfdx-scanner@v3.26.0
+        run: sf plugins install @salesforce/sfdx-scanner@v3.26.0
       - name: Scan code
-        run: sfdx scanner:run --format sarif --target 'changed-sources/**/*.cls'
-          --category 'Best Practices,Security' --outfile 'changed-sources/apexScanResults.sarif'
+        run: sf scanner run --format sarif --target 'changed-sources/**/*.cls' --category 'Best Practices,Security' --outfile 'changed-sources/apexScanResults.sarif'
       - name: List files in changed-sources directory
         run: ls -al changed-sources/
       - name: Upload SARIF file
@@ -61,8 +60,6 @@ jobs:
           sarif_file: changed-sources/apexScanResults.sarif
       - name: Deployment - run no tests
         run: >
-          sfdx force:source:deploy -p "changed-sources/force-app" --checkonly
-          --testlevel NoTestRun --json
+          sf project deploy start --source-dir "changed-sources/force-app" --test-level NoTestRun --check-only --json
       - name: 'validate destructive changes (if any)'
-        run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --testlevel NoTestRun --ignorewarnings 
-  
+        run: sf project deploy start --metadata-dir "changed-sources/destructiveChanges" --test-level NoTestRun --check-only --ignore-errors
