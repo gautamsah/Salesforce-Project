@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Deploy on ${{ vars.ENVIRONMENT_NAME }}
+    - name: Deploy on QA
       uses: jawills/sf-deploy@v1.0
       with:
         SFDX_AUTH_URL`: ${{ secrets.QA_SFDX_URL}}
