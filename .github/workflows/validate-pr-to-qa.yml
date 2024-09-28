@@ -44,7 +44,7 @@ jobs:
       - name: Create delta packages for new, modified or deleted metadata
         run: |
           mkdir changed-sources
-          sf sgd source delta -f "HEAD~1" -t "HEAD" -o "changed-sources/" -d -s "force-app/"
+          sf sgd source delta -f "HEAD~1" -t "HEAD" -o "changed-sources/" -d -s "force-app/" --loglevel trace
       - name: Installing java
         run: sudo apt-get update && sudo apt-get install default-jdk
       - name: Installing SFDX scanner
@@ -60,8 +60,10 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: changed-sources/apexScanResults.sarif
-      - name: Preview Deployment
-        run: sf project deploy preview --source-dir "changed-sources/force-app/" --json        
+      - name: Check for file changes
+        run: |
+          git log -n 2 --oneline
+          git diff HEAD~1 HEAD --name-only
       - name: Deployment - run no tests
         run: |
           echo "Listing files in changed-sources/force-app:"
