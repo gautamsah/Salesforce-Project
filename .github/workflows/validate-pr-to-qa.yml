@@ -42,10 +42,9 @@ jobs:
           echo y | sf plugins install sfdx-git-delta
           sf plugins
       - name: Create delta packages for new, modified or deleted metadata
-        run: >
+        run: |
           mkdir changed-sources
-
-          sf project generate delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source-dir force-app/
+          sf sgd source delta -f "HEAD^" -t "HEAD" -o "changed-sources/" -d -s "force-app/"
       - name: Installing java
         run: sudo apt-get update && sudo apt-get install default-jdk
       - name: Installing SFDX scanner
