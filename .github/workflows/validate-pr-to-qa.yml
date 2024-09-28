@@ -52,13 +52,16 @@ jobs:
       - name: Scan code
         run: sf scanner run --format sarif --target 'changed-sources/**/*.cls' --category 'Best Practices,Security' --outfile 'changed-sources/apexScanResults.sarif'
       - name: List files in changed-sources directory
-        run: ls -al changed-sources/
+        run: |
+          ls -al changed-sources/
+          echo "List of files in force-app directory"
+          ls -alR changed-sources/force-app/
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: changed-sources/apexScanResults.sarif
       - name: Deployment - run no tests
-        run: >
-          sf project deploy start --source-dir "changed-sources/force-app" --test-level NoTestRun --dry-run --json
+        run: |
+          sf project deploy start --source-dir "changed-sources/force-app/" --test-level NoTestRun --dry-run --json
       - name: 'validate destructive changes (if any)'
         run: sf project deploy start --metadata-dir "changed-sources/destructiveChanges" --test-level NoTestRun --dry-run --ignore-errors
