@@ -43,7 +43,7 @@ jobs:
       - name: Installing java
         run: sudo apt-get update && sudo apt-get install default-jdk
       - name: Installing SFDX scanner
-        run: sfdx plugins:install @salesforce/sfdx-scanner
+        run: sfdx plugins:install @salesforce/sfdx-scanner@v3.26.0
       - name: Scan code
         run: sfdx scanner:run --format sarif --target 'changed-sources/**/*.cls'
           --category 'Best Practices,Security' --outfile 'apexScanResults.sarif'
