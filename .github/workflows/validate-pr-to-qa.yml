@@ -55,20 +55,22 @@ jobs:
         run: |
           ls -al changed-sources/
           echo "List of files in force-app directory"
-          ls -alR changed-sources/force-app/
+          ls -al changed-sources/force-app/
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: changed-sources/apexScanResults.sarif
+      - name: Preview Deployment
+        run: sf project deploy preview --source-dir "changed-sources/force-app/" --json        
       - name: Deployment - run no tests
         run: |
-          # Check if changes are detected
+          echo "Listing files in changed-sources/force-app:"
+          ls -al changed-sources/force-app/
           if [ -d "changed-sources/force-app" ] && [ "$(ls -A changed-sources/force-app)" ]; then
             sf project deploy start --source-dir "changed-sources/force-app/" --test-level NoTestRun --json
           else
             echo "No changes detected to deploy."
           fi
-  
       - name: Validate destructive changes (if any)
         run: |
           if [ -d "changed-sources/destructiveChanges" ] && [ "$(ls -A changed-sources/destructiveChanges)" ]; then
