@@ -47,6 +47,8 @@ jobs:
           mkdir changed-sources
           MERGE_BASE=$(git merge-base HEAD origin/Integration)
           sf sgd source delta -f $MERGE_BASE -t "HEAD" -o "changed-sources/" -d -s "force-app/" --loglevel trace
+          echo "Delta creation output:"
+          ls -al changed-sources/
       - name: Installing java
         run: sudo apt-get update && sudo apt-get install default-jdk
       - name: Installing SFDX scanner
