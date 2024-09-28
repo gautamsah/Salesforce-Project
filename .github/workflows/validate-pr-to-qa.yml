@@ -9,7 +9,7 @@ on:
     branches:
       - Integration
 jobs:
-  deployment-to-qa:
+  validate-pr-to-qa:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v3
