@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - name: Install NPM
         run: |
-          npm install
+          npm install --legacy-peer-deps
       - name: Install Salesforce CLI
         run: |
           wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
