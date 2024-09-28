@@ -19,7 +19,7 @@ jobs:
       - name: Use NPM
         uses: actions/setup-node@v4
         with:
-            node-version: '20'
+            node-version: '18.18'
             check-latest: true
       - name: Install Salesforce CLI
         run: |
