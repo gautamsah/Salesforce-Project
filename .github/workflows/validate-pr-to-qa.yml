@@ -22,6 +22,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: Integration
       - name: Install NPM
         run: |
           npm install --legacy-peer-deps
@@ -44,7 +45,8 @@ jobs:
       - name: Create delta packages for new, modified or deleted metadata
         run: |
           mkdir changed-sources
-          sf sgd source delta -f $(git merge-base HEAD Integration) -t "HEAD" -o "changed-sources/" -d -s "force-app/" --loglevel trace
+          MERGE_BASE=$(git merge-base HEAD origin/Integration)
+          sf sgd source delta -f $MERGE_BASE -t "HEAD" -o "changed-sources/" -d -s "force-app/" --loglevel trace
       - name: Installing java
         run: sudo apt-get update && sudo apt-get install default-jdk
       - name: Installing SFDX scanner
