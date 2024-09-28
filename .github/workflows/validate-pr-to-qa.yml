@@ -62,6 +62,17 @@ jobs:
           sarif_file: changed-sources/apexScanResults.sarif
       - name: Deployment - run no tests
         run: |
-          sf project deploy start --source-dir "changed-sources/force-app" --test-level NoTestRun --dry-run --json
-      - name: 'validate destructive changes (if any)'
-        run: sf project deploy start --metadata-dir "changed-sources/destructiveChanges" --test-level NoTestRun --dry-run --ignore-errors
+          # Check if changes are detected
+          if [ -d "changed-sources/force-app" ] && [ "$(ls -A changed-sources/force-app)" ]; then
+            sf project deploy start --source-dir "changed-sources/force-app/" --test-level NoTestRun --json
+          else
+            echo "No changes detected to deploy."
+          fi
+  
+      - name: Validate destructive changes (if any)
+        run: |
+          if [ -d "changed-sources/destructiveChanges" ] && [ "$(ls -A changed-sources/destructiveChanges)" ]; then
+            sf project deploy start --metadata-dir "changed-sources/destructiveChanges" --test-level NoTestRun --ignore-errors --dry-run
+          else
+            echo "No destructive changes detected."
+          fi
