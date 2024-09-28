@@ -59,7 +59,10 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: changed-sources/apexScanResults.sarif
-      - name: Deployment - run all tests
+      - name: Deployment - run no tests
         run: >
           sfdx force:source:deploy -p "changed-sources/force-app" --checkonly
-          --testlevel RunLocalTests --json
+          --testlevel NoTestRun --json
+      - name: 'validate destructive changes (if any)'
+        run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --testlevel NoTestRun --ignorewarnings 
+  
