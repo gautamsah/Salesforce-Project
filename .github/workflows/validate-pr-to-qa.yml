@@ -44,7 +44,7 @@ jobs:
       - name: Create delta packages for new, modified or deleted metadata
         run: |
           mkdir changed-sources
-          sf sgd source delta -f "HEAD~1" -t "HEAD" -o "changed-sources/" -d -s "force-app/" --loglevel trace
+          sf sgd source delta -f $(git merge-base HEAD Integration) -t "HEAD" -o "changed-sources/" -d -s "force-app/" --loglevel trace
       - name: Installing java
         run: sudo apt-get update && sudo apt-get install default-jdk
       - name: Installing SFDX scanner
