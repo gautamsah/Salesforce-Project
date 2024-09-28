@@ -5,6 +5,12 @@ on:
       - force-app/**
     branches:
       - Integration
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
 jobs:
   push-to-qa:
     runs-on: ubuntu-latest
