@@ -43,12 +43,12 @@ jobs:
       - name: Installing java
         run: sudo apt-get update && sudo apt-get install default-jdk
       - name: Installing SFDX scanner
-        run: sfdx plugins:install @salesforce/sfdx-scanner@v4.0.0
+        run: sfdx plugins:install @salesforce/sfdx-scanner@v3.26.0
       - name: Scan code
         run: sfdx scanner:run --format sarif --target 'changed-sources/**/*.cls'
           --category 'Best Practices,Security' --outfile 'apexScanResults.sarif'
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: changed-sources/apexScanResults.sarif
       - name: Deployment - run all tests
