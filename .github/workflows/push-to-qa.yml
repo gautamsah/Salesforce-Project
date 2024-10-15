@@ -52,7 +52,7 @@ jobs:
           
       - name: Install NPM
         run: |
-          npm install
+          npm install --force
 
       # Now Install Salesforce CLI
       - name: 'Install Salesforce CLI'
