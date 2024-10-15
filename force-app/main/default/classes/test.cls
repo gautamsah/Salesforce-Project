@@ -41,3 +41,4 @@ public without sharing class test {
         }
     }      
 }
+// comment 1235

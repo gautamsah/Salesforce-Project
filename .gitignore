@@ -43,3 +43,11 @@ $RECYCLE.BIN/
 **/__pycache__/
 **/.venv/
 **/venv/
+
+# VS Code project settings
+.vscode/
+!.vscode/extensions.json
+.idea/
+.project/
+.history/
+.classpath/
